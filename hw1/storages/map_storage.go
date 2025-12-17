@@ -15,7 +15,7 @@ func NewMapStorage() *MapStorage {
 }
 
 func (ms *MapStorage) AddBook(book books.LibraryBook) error {
-	if valid, err := CheckBook(&book); valid {
+	if valid, err := CheckBook(&book); !valid {
 		return fmt.Errorf("invalid book: %w", err)
 	}
 
@@ -28,7 +28,7 @@ func (ms *MapStorage) FindBook(id uint64) (*books.LibraryBook, bool) {
 	return &book, ok
 }
 
-func (ms *MapStorage) GiveBook(id uint64) (*books.LibraryBook, error) {
+func (ms *MapStorage) GiveBook(id uint64, to string) (*books.LibraryBook, error) {
 	book, ok := ms.bookByID[id]
 	if !ok {
 		return nil, fmt.Errorf("storage give error: %w", ErrNonExistentBook)
@@ -37,6 +37,8 @@ func (ms *MapStorage) GiveBook(id uint64) (*books.LibraryBook, error) {
 		return nil, fmt.Errorf("storage give error: %w", ErrBookUnavailable)
 	}
 
+	book.IsOnHand = false
+	book.CurrentlyAt = to
 	return &book, nil
 }
 
@@ -51,12 +53,12 @@ func (ms *MapStorage) ReturnBook(id uint64, from string) error {
 	return nil
 }
 
-func (ms *MapStorage) DeleteBook(id uint64) bool {
+func (ms *MapStorage) DeleteBook(id uint64) error {
 	if _, ok := ms.bookByID[id]; !ok {
-		return false
+		return ErrNonExistentBook
 	}
 	delete(ms.bookByID, id)
-	return true
+	return nil
 }
 
 func (ms *MapStorage) Clear() {

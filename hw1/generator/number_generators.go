@@ -11,7 +11,7 @@ func SequenceGenerator(start uint64) func(...any) uint64 {
 	}
 }
 
-func FromAddressGenerator(start uint64) func(...any) uint64 {
+func FromAddressGenerator() func(...any) uint64 {
 	return func(obj ...any) uint64 {
 		if len(obj) == 0 {
 			return 0

@@ -6,8 +6,6 @@ import (
 	books "github.com/ZetroRetro/GoLangHomeworkMTS/hw1/book_models"
 )
 
-var emptyBookSpace = books.LibraryBook{}
-
 type SliceStorage struct {
 	items []books.LibraryBook
 }
@@ -17,12 +15,12 @@ func NewSliceStorage() *SliceStorage {
 }
 
 func (ss *SliceStorage) AddBook(book books.LibraryBook) error {
-	if valid, err := CheckBook(&book); valid {
+	if valid, err := CheckBook(&book); !valid {
 		return fmt.Errorf("invalid book: %w", err)
 	}
 
 	for i, item := range ss.items {
-		if item.ID == book.ID || item.ID == 0 {
+		if item.ID == book.ID {
 			ss.items[i] = book
 			return nil
 		}

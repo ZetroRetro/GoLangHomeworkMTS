@@ -116,8 +116,8 @@ func (l *Library) reIndex() {
 }
 
 func (l *Library) generateUniqueID(opts ...any) (uint64, error) {
-	for attempt := 0; attempt < kMAX_ATTEMPTS; attempt++ {
-		id := l.idGen(opts)
+	for range kMAX_ATTEMPTS {
+		id := l.idGen(opts...)
 		if id == 0 {
 			continue
 		}
